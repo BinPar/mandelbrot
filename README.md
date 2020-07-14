@@ -1,3 +1,3 @@
-# TypeScript Next Boilerplate
+# Mandelbrot with TypeScript and Next
 
-TypeScript Next Boilerplate
+Just testing performance...
