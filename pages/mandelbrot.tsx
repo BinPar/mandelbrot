@@ -1,40 +1,30 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import Canvas, { ColorFn } from '../components/Canvas';
+
+const getLight = (x: number, y: number): number => {
+  const dist = Math.sqrt(x ** 2 + y ** 2);
+  return Math.cos((dist / 10) ** 2);
+};
+
+const axis: ColorFn = (x, y) => {
+  const light = getLight(x, y);
+  return {
+    r: light * 255,
+    g: light * 255,
+    b: light * 128,
+  };
+};
 
 export default (): JSX.Element => {
-  const canvas = useRef<HTMLCanvasElement>();
-
-  useEffect((): void => {
-    if (canvas.current) {
-      const ctx = canvas.current.getContext('2d');
-      canvas.current.width = canvas.current.clientWidth;
-      canvas.current.height = canvas.current.clientHeight;
-      const { width, height } = canvas.current;
-      const imageData = ctx.getImageData(0, 0, width, height);
-      const drawPixel = (x, y, r, g, b): void => {
-        const index = (x + y * width) * 4;
-        imageData.data[index + 0] = r;
-        imageData.data[index + 1] = g;
-        imageData.data[index + 2] = b;
-        imageData.data[index + 3] = 255;
-      };
-      for (let x = 0; x < width; x++) {
-        for (let y = 0; y < width; y++) {
-          const light = (x % 50 === 0 || y % 50 === 0) ? 255: 0;
-          drawPixel(x, y, light, light, light);
-        }
-      }
-      ctx.putImageData(imageData, 0, 0);
-    }
-  });
   return (
     <React.Fragment>
       <Head>
         <title>BinPar: Standard JS Mandelbrot</title>
         <link rel="stylesheet" type="text/css" href="/styles.css" />
       </Head>
-      <canvas ref={canvas} className="fullCanvas" />
+      <Canvas onDraw={axis} initialZoom={10} />
       <Link href="/">
         <a className="back">← Back</a>
       </Link>
