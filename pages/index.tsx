@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default (): JSX.Element => (
   <React.Fragment>
     <Head>
-      <title>BinPar Mandelbrot Performance Tests</title>
+      <title>BinPar: Mandelbrot Performance Tests</title>
       <link rel="stylesheet" type="text/css" href="/styles.css" />
     </Head>
     <h1>BinPar Mandelbrot Performance Tests</h1>
