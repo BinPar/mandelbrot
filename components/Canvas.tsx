@@ -4,6 +4,9 @@ export type ColorFn = (x: number, y: number) => Color;
 
 type VoidFunction = () => void | null;
 
+const pixelation = 2;
+const zoomSpeed = 200;
+
 interface Color {
   r: number;
   g: number;
@@ -29,25 +32,31 @@ const Canvas = ({ onDraw, initialZoom }: CanvasProps): JSX.Element => {
   const onMouseMove = (event: MouseEvent): void => {
     if (event.buttons === 1) {
       setCenter((current) => ({
-        x: current.x + event.movementX,
-        y: current.y + event.movementY,
+        x: current.x + event.movementX / pixelation,
+        y: current.y + event.movementY / pixelation,
       }));
     }
   };
 
+  const onWheel = (event: WheelEvent): void => {
+    setZoom((current) => current + current * (event.deltaY / zoomSpeed));
+  }
+
   useEffect((): VoidFunction => {
     if (canvas.current) {
       const ctx = canvas.current.getContext('2d');
-      canvas.current.width = canvas.current.clientWidth;
-      canvas.current.height = canvas.current.clientHeight;
+      canvas.current.width = canvas.current.clientWidth / pixelation;
+      canvas.current.height = canvas.current.clientHeight / pixelation;
       const { width, height } = canvas.current;
       setCenter({ x: width / 2, y: height / 2 });
       setZoom(zoom);
       setContext(ctx);
       setImageData(ctx.getImageData(0, 0, width, height));
       canvas.current.addEventListener('mousemove', onMouseMove);
+      canvas.current.addEventListener('wheel', onWheel);
       return (): void => {
         canvas.current.removeEventListener('mousemove', onMouseMove);
+        canvas.current.removeEventListener('wheel', onWheel);
       };
     }
     return null;
