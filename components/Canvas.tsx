@@ -4,7 +4,7 @@ export type ColorFn = (x: number, y: number) => Color;
 
 type VoidFunction = () => void | null;
 
-const pixelation = 2;
+const pixelation = 4;
 const zoomSpeed = 200;
 
 interface Color {
@@ -25,7 +25,7 @@ interface CanvasProps {
 const Canvas = ({ onDraw, initialZoom }: CanvasProps): JSX.Element => {
   const canvas = useRef<HTMLCanvasElement>();
   const [center, setCenter] = useState<Axis>({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState<number>(initialZoom);
+  const [zoom, setZoom] = useState<number>(initialZoom / pixelation);
   const [imageData, setImageData] = useState<ImageData>();
   const [context, setContext] = useState<CanvasRenderingContext2D>();
 
@@ -39,8 +39,21 @@ const Canvas = ({ onDraw, initialZoom }: CanvasProps): JSX.Element => {
   };
 
   const onWheel = (event: WheelEvent): void => {
-    setZoom((current) => current + current * (event.deltaY / zoomSpeed));
-  }
+    setZoom((current) => {
+      const delta = current * (event.deltaY / zoomSpeed);
+      setCenter((currentPos) => {
+        const x = currentPos.x - event.clientX / pixelation;
+        const dx = x * (current + delta) / current - x;
+        const y = currentPos.y - event.clientY / pixelation;
+        const dy = y * (current + delta) / current - y;
+        return {
+          x: currentPos.x + dx,
+          y: currentPos.y + dy,
+        };
+      });
+      return current + delta;
+    });
+  };
 
   useEffect((): VoidFunction => {
     if (canvas.current) {
