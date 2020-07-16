@@ -2,6 +2,6 @@
 
 Just testing performance...
 
-(Drag 2 pan && vertical scroll 2 zoom)
+(Drag 2 Pan && Vertical Scroll 2 Zoom)
 
 https://mandelbrot-eta.vercel.app/
