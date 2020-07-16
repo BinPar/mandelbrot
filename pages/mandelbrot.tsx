@@ -9,7 +9,6 @@ const getLight = (x: number, y: number): number => {
   let e = x;
   let i = y;
   let n = 0;
-
   while (n < maxIterations) {
     const aa = e ** 2 - i ** 2;
     const bb = 2 * e * i;
