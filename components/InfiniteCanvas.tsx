@@ -68,7 +68,7 @@ const Canvas = ({ onDraw, initialZoom }: CanvasProps): JSX.Element => {
               y: currentPos.y + dy,
             };
           });
-          return current + delta;
+          return Math.abs(current + delta);
         });
       };
       const ctx = canvas.current.getContext('2d');

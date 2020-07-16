@@ -3,19 +3,18 @@ import Head from 'next/head';
 import Link from 'next/link';
 import InfiniteCanvas, { ColorFn } from '../components/InfiniteCanvas';
 
-const maxIterations = 100;
+const maxIterations = 200;
 
 const getLight = (x: number, y: number): number => {
-  let e = x;
-  let i = y;
+  let natural = x;
+  let imaginary = y;
   let n = 0;
   while (n < maxIterations) {
-    const aa = e ** 2 - i ** 2;
-    const bb = 2 * e * i;
-    e = aa + x;
-    i = bb + y;
-    if (e * e + i * i > 16) {
-      return Math.sqrt(n / maxIterations);
+    const newImaginary = 2 * natural * imaginary + y;
+    natural = natural ** 2 - imaginary ** 2 + x;
+    imaginary = newImaginary;
+    if (natural * natural + imaginary * imaginary > 16) {
+      return n;
     }
     n++;
   }
@@ -23,11 +22,11 @@ const getLight = (x: number, y: number): number => {
 };
 
 const axis: ColorFn = (x, y) => {
-  const light = getLight(x, y);
+  const light = (getLight(x, y) * 20) % 255;
   return {
-    r: light * 255,
-    g: light * 255,
-    b: light * 128,
+    r: light,
+    g: light,
+    b: Math.sqrt(light * 200),
   };
 };
 
