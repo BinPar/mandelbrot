@@ -13,7 +13,7 @@ export default (): JSX.Element => (
       <li>
         <Link href="/mandelbrot">
           <a>Standard JS Mandelbrot</a>
-        </Link>
+        </Link>        
       </li>
     </ul>
   </React.Fragment>

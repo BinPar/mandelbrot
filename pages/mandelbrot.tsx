@@ -22,11 +22,11 @@ const getLight = (x: number, y: number): number => {
 };
 
 const axis: ColorFn = (x, y) => {
-  const light = (getLight(x, y) * 20) % 255;
+  const value = getLight(x, y);
   return {
-    r: light,
-    g: light,
-    b: Math.sqrt(light * 200),
+    r: Math.sin(value / 12) * 128 + 128,
+    g: Math.sin(value / 22) * 128 + 128,
+    b: Math.cos(value / 12) * 128 + 128
   };
 };
 
