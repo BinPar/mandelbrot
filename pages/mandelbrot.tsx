@@ -4,8 +4,8 @@ import Link from 'next/link';
 import Canvas, { ColorFn } from '../components/Canvas';
 
 const getLight = (x: number, y: number): number => {
-  const dist = Math.sqrt(x ** 2 + y ** 2);
-  return Math.cos((dist / 10) ** 2);
+  const dist = x ** 2 + y ** 2;
+  return Math.cos(dist / 100);
 };
 
 const axis: ColorFn = (x, y) => {
