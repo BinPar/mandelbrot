@@ -23,8 +23,13 @@ interface CanvasProps {
   initialZoom: number;
 }
 
-
-const drawPixel = (imageData: ImageData, axis: Axis, r: number, g: number, b: number): void => {
+const drawPixel = (
+  imageData: ImageData,
+  axis: Axis,
+  r: number,
+  g: number,
+  b: number,
+): void => {
   const index = (axis.x + axis.y * imageData.width) * 4;
   const { data } = imageData;
   data[index + 0] = r;
@@ -55,9 +60,9 @@ const Canvas = ({ onDraw, initialZoom }: CanvasProps): JSX.Element => {
           const delta = current * (event.deltaY / zoomSpeed);
           setCenter((currentPos) => {
             const x = currentPos.x - event.clientX / pixelation;
-            const dx = x * (current + delta) / current - x;
+            const dx = (x * (current + delta)) / current - x;
             const y = currentPos.y - event.clientY / pixelation;
-            const dy = y * (current + delta) / current - y;
+            const dy = (y * (current + delta)) / current - y;
             return {
               x: currentPos.x + dx,
               y: currentPos.y + dy,
@@ -67,16 +72,24 @@ const Canvas = ({ onDraw, initialZoom }: CanvasProps): JSX.Element => {
         });
       };
       const ctx = canvas.current.getContext('2d');
-      canvas.current.width = canvas.current.clientWidth / pixelation;
-      canvas.current.height = canvas.current.clientHeight / pixelation;
+      const onWindowResize = (): void => {
+        const currentCanvas = canvas.current;
+        currentCanvas.width = currentCanvas.clientWidth / pixelation;
+        currentCanvas.height = currentCanvas.clientHeight / pixelation;
+        setImageData(
+          ctx.getImageData(0, 0, currentCanvas.width, currentCanvas.height),
+        );
+      };
+      onWindowResize();
       const { width, height } = canvas.current;
       setCenter({ x: width / 2, y: height / 2 });
       setZoom(zoom);
       setContext(ctx);
-      setImageData(ctx.getImageData(0, 0, width, height));
+      window.addEventListener('resize', onWindowResize);
       canvas.current.addEventListener('mousemove', onMouseMove);
       canvas.current.addEventListener('wheel', onWheel);
       return (): void => {
+        window.removeEventListener('resize', onWindowResize);
         canvas.current.removeEventListener('mousemove', onMouseMove);
         canvas.current.removeEventListener('wheel', onWheel);
       };

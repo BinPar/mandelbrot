@@ -1,11 +1,26 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import Canvas, { ColorFn } from '../components/Canvas';
+import InfiniteCanvas, { ColorFn } from '../components/InfiniteCanvas';
+
+const maxIterations = 100;
 
 const getLight = (x: number, y: number): number => {
-  const dist = x ** 2 + y ** 2;
-  return Math.cos(dist / 100);
+  let e = x;
+  let i = y;
+  let n = 0;
+
+  while (n < maxIterations) {
+    const aa = e ** 2 - i ** 2;
+    const bb = 2 * e * i;
+    e = aa + x;
+    i = bb + y;
+    if (e * e + i * i > 16) {
+      return Math.sqrt(n / maxIterations);
+    }
+    n++;
+  }
+  return 0;
 };
 
 const axis: ColorFn = (x, y) => {
@@ -24,7 +39,7 @@ export default (): JSX.Element => {
         <title>BinPar: Standard JS Mandelbrot</title>
         <link rel="stylesheet" type="text/css" href="/styles.css" />
       </Head>
-      <Canvas onDraw={axis} initialZoom={10} />
+      <InfiniteCanvas onDraw={axis} initialZoom={200} />
       <Link href="/">
         <a className="back">← Back</a>
       </Link>
