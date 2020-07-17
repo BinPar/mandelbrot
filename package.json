@@ -1,6 +1,6 @@
 {
   "name": "ts-next-boilerplate",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "TypeScript Next Boilerplate",
   "scripts": {
     "dev": "next",
