@@ -1,9 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import InfiniteCanvas, { ColorFn } from '../components/InfiniteCanvas';
+import InfiniteCanvas from '../components/InfiniteCanvas';
+import { ColorFn } from '../model/types';
 
-const maxIterations = 200;
+const maxIterations = 300;
 
 const getLight = (x: number, y: number): number => {
   let natural = x;
@@ -24,9 +25,9 @@ const getLight = (x: number, y: number): number => {
 const axis: ColorFn = (x, y) => {
   const value = getLight(x, y);
   return {
-    r: Math.sin(value / 12) * 128 + 128,
-    g: Math.sin(value / 22) * 128 + 128,
-    b: Math.cos(value / 12) * 128 + 128
+    r: 128 - Math.cos(value / 12) * 128,
+    g: 128 - Math.cos(value / 22) * 128,
+    b: 128 - Math.cos(value / 7) * 128,
   };
 };
 
