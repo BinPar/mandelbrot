@@ -1,22 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
-
-export type ColorFn = (x: number, y: number) => Color;
-
-type VoidFunction = () => void | null;
+import { Axis, ColorFn } from '../model/types';
 
 const pixelation = 1;
 const zoomSpeed = 200;
 
-interface Color {
-  r: number;
-  g: number;
-  b: number;
-}
 
-interface Axis {
-  x: number;
-  y: number;
-}
 
 interface CanvasProps {
   onDraw: ColorFn;
