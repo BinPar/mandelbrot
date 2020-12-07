@@ -19,9 +19,7 @@ FROM dependencies AS test
 COPY ./pages ./pages
 COPY ./model ./model
 COPY ./components ./components
-COPY ./tests ./tests
 RUN npm run lint
-RUN npm run test
 
 # ---- Compile  ----
 FROM build-base AS compile
