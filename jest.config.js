@@ -7,6 +7,6 @@ module.exports = {
     '^.+\\.jsx?$': require.resolve('babel-jest'),
     '^.+\\.tsx?$': 'ts-jest'
   },
-  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
+  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/prod_node_modules/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
 };
