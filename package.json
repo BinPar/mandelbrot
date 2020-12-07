@@ -1,11 +1,11 @@
 {
   "name": "ts-next-boilerplate",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "TypeScript Next Boilerplate",
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 80",
     "test": "jest",
     "lint": "eslint \"**/*.{ts,tsx}\" --ignore-pattern node_modules/ --ignore-pattern prod_node_modules/",
     "test-dev": "NODE_ENV=development npx jest --watch"
