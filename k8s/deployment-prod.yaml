@@ -1,0 +1,103 @@
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mandelbrot
+  labels:
+    app.kubernetes.io/name: prod
+    app.kubernetes.io/instance: prod
+---
+# Service - bi-productive-service
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: mandelbrot-front-prod
+  name: mandelbrot-front-service-prod
+  namespace: mandelbrot-prod
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    run: mandelbrot-front-prod
+  sessionAffinity: None
+  type: ClusterIP
+---
+# Issuer - letsencrypt
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: letsencrypt-prod
+  namespace: mandelbrot-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: soporte@binpar.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+---
+# Ingress - ingress-pre
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-passthrough: 'false'
+    cert-manager.io/issuer: 'letsencrypt-prod'
+  generation: 2
+  name: ingress-prod
+  namespace: mandelbrot-prod
+spec:
+  rules:
+    - host: mandelbrot.binpar.cloud
+      http:
+        paths:
+          - backend:
+              serviceName: mandelbrot-front-service-prod
+              servicePort: 80
+            path: /
+  tls:
+    - hosts:
+        - mandelbrot.binpar.cloud
+      secretName: mandelbrot-front-cert-prod
+---
+# Deploy - bi-productive-deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: mandelbrot-front-prod
+  name: mandelbrot-front-deploy-prod
+  namespace: mandelbrot-prod
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      run: mandelbrot-front-prod
+  template:
+    metadata:
+      labels:
+        run: mandelbrot-front-prod
+    spec:
+      imagePullSecrets:
+        - name: pipeline-docker-registry
+      containers:
+        - image: 402083338966.dkr.ecr.eu-west-1.amazonaws.com/mandelbrot:latest
+          name: mandelbrot-front-prod
+          ports:
+            - containerPort: 80          
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "50m"
+            limits:
+              memory: "1024Mi"
+              cpu: "950m"

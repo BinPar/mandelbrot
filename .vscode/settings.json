@@ -3,8 +3,13 @@
     "Interop",
     "binpar",
     "camelcase",
+    "colbyhill",
+    "elgohr",
     "eslintjsx",
     "esnext",
-    "plusplus"
+    "kubernetes",
+    "letsencrypt",
+    "plusplus",
+    "rjstone"
   ]
 }
